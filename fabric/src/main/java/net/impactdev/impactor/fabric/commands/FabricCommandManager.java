@@ -76,7 +76,7 @@ public final class FabricCommandManager extends AbstractCommandManager<CommandSo
         return source -> {
             @Nullable Entity entity = source.getEntity();
             if(entity == null) {
-                return new FabricCommandSource(PlatformSource.console(), source);
+                return new FabricCommandSource(PlatformSource.server(), source);
             }
 
             if(entity instanceof ServerPlayer) {

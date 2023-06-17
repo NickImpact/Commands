@@ -79,11 +79,11 @@ public abstract class ImpactorCommandSource<S> implements CommandSource {
     }
 
     protected boolean isConsole() {
-        return this.uuid().equals(PlatformSource.CONSOLE_UUID);
+        return this.uuid().equals(PlatformSource.SERVER_UUID);
     }
 
     protected boolean isPlayer() {
-        return this.source instanceof PlatformPlayer || this.uuid().equals(PlatformSource.CONSOLE_UUID);
+        return this.source instanceof PlatformPlayer || this.uuid().equals(PlatformSource.SERVER_UUID);
     }
 
     @Override

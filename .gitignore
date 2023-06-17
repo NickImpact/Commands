@@ -40,3 +40,7 @@ bin/
 
 ### Mac OS ###
 .DS_Store
+/.idea/*.gitignore
+/.idea/codeStyles/*.xml
+/.idea/*.xml
+/.idea/runConfigurations/*.xml

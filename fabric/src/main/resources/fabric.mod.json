@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "id": "impactor-commands-api",
+  "id": "impactor-command-api",
   "version": "${version}",
-  "name": "Impactor Commands API",
+  "name": "Impactor Command API",
   "authors": [
     "NickImpact"
   ],

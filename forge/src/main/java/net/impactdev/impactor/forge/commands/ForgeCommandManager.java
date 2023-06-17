@@ -76,7 +76,7 @@ public class ForgeCommandManager extends AbstractCommandManager<CommandSourceSta
         return source -> {
             @Nullable Entity entity = source.getEntity();
             if(entity == null) {
-                return new ForgeCommandSource(PlatformSource.console(), source);
+                return new ForgeCommandSource(PlatformSource.server(), source);
             }
 
             if(entity instanceof ServerPlayer) {
