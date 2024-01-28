@@ -1,0 +1,17 @@
+{
+  "required": true,
+  "package": "net.impactdev.impactor.forge.commands.implementation.mixins",
+  "compatibilityLevel": "JAVA_17",
+  "minVersion": "0.8",
+  "mixins": [
+    "CommandSelectionAccessor",
+    "EntitySelectorMixin",
+    "EntitySelectorParserMixin",
+    "MessageArgumentMessageAccess",
+    "MessageArgumentPartAccess"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "refmap": "mixins.impactor.fabric.refmap.json"
+}

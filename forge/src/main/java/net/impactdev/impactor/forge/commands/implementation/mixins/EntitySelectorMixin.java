@@ -23,31 +23,29 @@
  *
  */
 
-package net.impactdev.impactor.fabric.commands;
+package net.impactdev.impactor.forge.commands.implementation.mixins;
 
-import net.impactdev.impactor.api.commands.CommandSource;
-import net.impactdev.impactor.api.logging.PluginLogger;
-import net.impactdev.impactor.api.platform.plugins.PluginMetadata;
-import net.impactdev.impactor.core.commands.manager.AbstractCommandManager;
-import net.minecraft.commands.CommandSourceStack;
-import org.incendo.cloud.CommandManager;
-import org.incendo.cloud.SenderMapper;
-import org.incendo.cloud.execution.ExecutionCoordinator;
-import org.incendo.cloud.fabric.FabricServerCommandManager;
+import net.minecraft.world.entity.EntitySelector;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.incendo.cloud.minecraft.modded.internal.EntitySelectorAccess;
+import org.spongepowered.asm.mixin.Implements;
+import org.spongepowered.asm.mixin.Interface;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 
+@Mixin(EntitySelector.class)
+@Implements({@Interface(iface = EntitySelectorAccess.class, prefix = "cloud$", unique = true)})
+abstract class EntitySelectorMixin {
 
-public final class FabricCommandManager extends AbstractCommandManager {
+    @Unique
+    private String cloud$input;
 
-    private final SenderMapper<CommandSourceStack, CommandSource> mapper = new FabricSenderMapper();
-
-    public FabricCommandManager(PluginMetadata metadata, PluginLogger logger) {
-        super(metadata, logger);
-        this.initialize();
+    public @NonNull String cloud$inputString() {
+        return this.cloud$input;
     }
 
-    @Override
-    protected CommandManager<CommandSource> create(ExecutionCoordinator<CommandSource> coordinator) {
-        return new FabricServerCommandManager<>(coordinator, this.mapper);
+    public void cloud$inputString(final @NonNull String input) {
+        this.cloud$input = input;
     }
 
 }

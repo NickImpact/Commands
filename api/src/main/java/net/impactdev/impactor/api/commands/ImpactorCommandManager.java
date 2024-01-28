@@ -25,12 +25,15 @@
 
 package net.impactdev.impactor.api.commands;
 
-import cloud.commandframework.CommandManager;
-import cloud.commandframework.extra.confirmation.CommandConfirmationManager;
 import net.impactdev.impactor.api.Impactor;
 import net.impactdev.impactor.api.logging.PluginLogger;
 import net.impactdev.impactor.api.platform.plugins.PluginMetadata;
 import net.impactdev.impactor.api.utility.builders.Builder;
+import org.incendo.cloud.CommandManager;
+import org.incendo.cloud.brigadier.CloudBrigadierManager;
+import org.incendo.cloud.processors.confirmation.ConfirmationManager;
+
+import java.util.Optional;
 
 public interface ImpactorCommandManager {
 
@@ -42,7 +45,7 @@ public interface ImpactorCommandManager {
 
     CommandManager<CommandSource> delegate();
 
-    CommandConfirmationManager<CommandSource> confirmations();
+    ConfirmationManager<CommandSource> confirmations();
 
     interface CommandManagerBuilder extends Builder<ImpactorCommandManager> {
 

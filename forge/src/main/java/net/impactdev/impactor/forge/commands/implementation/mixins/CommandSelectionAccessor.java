@@ -23,31 +23,16 @@
  *
  */
 
-package net.impactdev.impactor.fabric.commands;
+package net.impactdev.impactor.forge.commands.implementation.mixins;
 
-import net.impactdev.impactor.api.commands.CommandSource;
-import net.impactdev.impactor.api.logging.PluginLogger;
-import net.impactdev.impactor.api.platform.plugins.PluginMetadata;
-import net.impactdev.impactor.core.commands.manager.AbstractCommandManager;
-import net.minecraft.commands.CommandSourceStack;
-import org.incendo.cloud.CommandManager;
-import org.incendo.cloud.SenderMapper;
-import org.incendo.cloud.execution.ExecutionCoordinator;
-import org.incendo.cloud.fabric.FabricServerCommandManager;
+import net.minecraft.commands.Commands;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.gen.Accessor;
 
+@Mixin(Commands.CommandSelection.class)
+public interface CommandSelectionAccessor {
 
-public final class FabricCommandManager extends AbstractCommandManager {
+    @Accessor("includeIntegrated") boolean integrated();
 
-    private final SenderMapper<CommandSourceStack, CommandSource> mapper = new FabricSenderMapper();
-
-    public FabricCommandManager(PluginMetadata metadata, PluginLogger logger) {
-        super(metadata, logger);
-        this.initialize();
-    }
-
-    @Override
-    protected CommandManager<CommandSource> create(ExecutionCoordinator<CommandSource> coordinator) {
-        return new FabricServerCommandManager<>(coordinator, this.mapper);
-    }
-
+    @Accessor("includeDedicated") boolean dedicated();
 }

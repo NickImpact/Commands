@@ -11,10 +11,6 @@ architectury {
 
 loom {
     silentMojangMappingsLicense()
-
-    mixin {
-        defaultRefmapName.set("mixins.impactor.${project.name}.commands.refmap.json")
-    }
 }
 
 dependencies {

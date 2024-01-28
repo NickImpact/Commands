@@ -9,6 +9,16 @@ repositories {
     maven("https://maven.impactdev.net/repository/development/")
     maven("https://libraries.minecraft.net")
     maven("https://hub.spigotmc.org/nexus/content/groups/public/")
+    maven("https://s01.oss.sonatype.org/content/repositories/snapshots") {
+        name = "Sonatype 01 Snapshots"
+    }
+
+    maven("https://oss.sonatype.org/content/repositories/snapshots/") {
+        name = "sonatype-snapshots"
+        mavenContent {
+            snapshotsOnly()
+        }
+    }
 }
 
 version = rootProject.version

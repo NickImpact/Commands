@@ -12,6 +12,7 @@ dependencies {
     forge("net.minecraftforge:forge:${rootProject.property("minecraft")}-${rootProject.property("forge")}")
 
     api(project(":common"))
+    modApi("org.incendo:cloud-minecraft-modded-common:2.0.0-beta.1")
 }
 
 tasks {

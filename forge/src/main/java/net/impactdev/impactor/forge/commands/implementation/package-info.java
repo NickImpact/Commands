@@ -23,31 +23,17 @@
  *
  */
 
-package net.impactdev.impactor.fabric.commands;
+/**
+ * The following contents of this package are mostly copy/pasted directly from the NeoForge layer of the
+ * cloud-minecraft-modded package grouping. This is done mostly to support Forge for the time being, given
+ * the unlikely nature that Cloud will support Forge themselves (given Lex drama).
+ * <p>
+ * This code is effectively temporary, and will be dropped as NeoForge gains better traction and the need
+ * for Forge coverage is lost.
+ */
 
-import net.impactdev.impactor.api.commands.CommandSource;
-import net.impactdev.impactor.api.logging.PluginLogger;
-import net.impactdev.impactor.api.platform.plugins.PluginMetadata;
-import net.impactdev.impactor.core.commands.manager.AbstractCommandManager;
-import net.minecraft.commands.CommandSourceStack;
-import org.incendo.cloud.CommandManager;
-import org.incendo.cloud.SenderMapper;
-import org.incendo.cloud.execution.ExecutionCoordinator;
-import org.incendo.cloud.fabric.FabricServerCommandManager;
+@Cloud
+@API(status = API.Status.INTERNAL)
+package net.impactdev.impactor.forge.commands.implementation;
 
-
-public final class FabricCommandManager extends AbstractCommandManager {
-
-    private final SenderMapper<CommandSourceStack, CommandSource> mapper = new FabricSenderMapper();
-
-    public FabricCommandManager(PluginMetadata metadata, PluginLogger logger) {
-        super(metadata, logger);
-        this.initialize();
-    }
-
-    @Override
-    protected CommandManager<CommandSource> create(ExecutionCoordinator<CommandSource> coordinator) {
-        return new FabricServerCommandManager<>(coordinator, this.mapper);
-    }
-
-}
+import org.apiguardian.api.API;

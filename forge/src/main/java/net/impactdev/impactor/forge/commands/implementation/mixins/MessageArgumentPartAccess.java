@@ -23,31 +23,17 @@
  *
  */
 
-package net.impactdev.impactor.fabric.commands;
+package net.impactdev.impactor.forge.commands.implementation.mixins;
 
-import net.impactdev.impactor.api.commands.CommandSource;
-import net.impactdev.impactor.api.logging.PluginLogger;
-import net.impactdev.impactor.api.platform.plugins.PluginMetadata;
-import net.impactdev.impactor.core.commands.manager.AbstractCommandManager;
-import net.minecraft.commands.CommandSourceStack;
-import org.incendo.cloud.CommandManager;
-import org.incendo.cloud.SenderMapper;
-import org.incendo.cloud.execution.ExecutionCoordinator;
-import org.incendo.cloud.fabric.FabricServerCommandManager;
+import net.minecraft.commands.arguments.MessageArgument;
+import net.minecraft.commands.arguments.selector.EntitySelector;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.gen.Accessor;
 
+@Mixin(MessageArgument.Part.class)
+public interface MessageArgumentPartAccess extends org.incendo.cloud.minecraft.modded.internal.MessageArgumentPartAccess {
 
-public final class FabricCommandManager extends AbstractCommandManager {
-
-    private final SenderMapper<CommandSourceStack, CommandSource> mapper = new FabricSenderMapper();
-
-    public FabricCommandManager(PluginMetadata metadata, PluginLogger logger) {
-        super(metadata, logger);
-        this.initialize();
-    }
-
+    @Accessor("selector")
     @Override
-    protected CommandManager<CommandSource> create(ExecutionCoordinator<CommandSource> coordinator) {
-        return new FabricServerCommandManager<>(coordinator, this.mapper);
-    }
-
+    EntitySelector accessor$selector();
 }

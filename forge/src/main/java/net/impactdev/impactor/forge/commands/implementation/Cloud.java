@@ -23,31 +23,19 @@
  *
  */
 
-package net.impactdev.impactor.fabric.commands;
+package net.impactdev.impactor.forge.commands.implementation;
 
-import net.impactdev.impactor.api.commands.CommandSource;
-import net.impactdev.impactor.api.logging.PluginLogger;
-import net.impactdev.impactor.api.platform.plugins.PluginMetadata;
-import net.impactdev.impactor.core.commands.manager.AbstractCommandManager;
-import net.minecraft.commands.CommandSourceStack;
-import org.incendo.cloud.CommandManager;
-import org.incendo.cloud.SenderMapper;
-import org.incendo.cloud.execution.ExecutionCoordinator;
-import org.incendo.cloud.fabric.FabricServerCommandManager;
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-
-public final class FabricCommandManager extends AbstractCommandManager {
-
-    private final SenderMapper<CommandSourceStack, CommandSource> mapper = new FabricSenderMapper();
-
-    public FabricCommandManager(PluginMetadata metadata, PluginLogger logger) {
-        super(metadata, logger);
-        this.initialize();
-    }
-
-    @Override
-    protected CommandManager<CommandSource> create(ExecutionCoordinator<CommandSource> coordinator) {
-        return new FabricServerCommandManager<>(coordinator, this.mapper);
-    }
-
-}
+/**
+ * This denotes a package where the following code is specifically pulled from the Cloud Command Framework.
+ * Code inherited this way is mostly to cover incompatibilities due to version specific code.
+ */
+@Target(ElementType.PACKAGE)
+@Retention(RetentionPolicy.RUNTIME)
+@Documented
+public @interface Cloud {}

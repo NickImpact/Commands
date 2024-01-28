@@ -26,28 +26,32 @@
 package net.impactdev.impactor.fabric.commands;
 
 import net.impactdev.impactor.api.commands.CommandSource;
-import net.impactdev.impactor.api.logging.PluginLogger;
-import net.impactdev.impactor.api.platform.plugins.PluginMetadata;
-import net.impactdev.impactor.core.commands.manager.AbstractCommandManager;
+import net.impactdev.impactor.api.platform.players.PlatformPlayer;
+import net.impactdev.impactor.api.platform.sources.PlatformSource;
 import net.minecraft.commands.CommandSourceStack;
-import org.incendo.cloud.CommandManager;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.Entity;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import org.incendo.cloud.SenderMapper;
-import org.incendo.cloud.execution.ExecutionCoordinator;
-import org.incendo.cloud.fabric.FabricServerCommandManager;
 
+public final class FabricSenderMapper implements SenderMapper<CommandSourceStack, CommandSource> {
+    @Override
+    public @NonNull CommandSource map(@NonNull CommandSourceStack base) {
+        @Nullable Entity entity = base.getEntity();
+        if(entity == null) {
+            return new FabricCommandSource(PlatformSource.server(), base);
+        }
 
-public final class FabricCommandManager extends AbstractCommandManager {
+        if(entity instanceof ServerPlayer player) {
+            return new FabricCommandSource(PlatformPlayer.getOrCreate(player.getUUID()), base);
+        }
 
-    private final SenderMapper<CommandSourceStack, CommandSource> mapper = new FabricSenderMapper();
-
-    public FabricCommandManager(PluginMetadata metadata, PluginLogger logger) {
-        super(metadata, logger);
-        this.initialize();
+        return new FabricCommandSource(PlatformSource.factory().fromID(entity.getUUID()), base);
     }
 
     @Override
-    protected CommandManager<CommandSource> create(ExecutionCoordinator<CommandSource> coordinator) {
-        return new FabricServerCommandManager<>(coordinator, this.mapper);
+    public @NonNull CommandSourceStack reverse(@NonNull CommandSource mapped) {
+        return ((FabricCommandSource) mapped).delegate();
     }
-
 }

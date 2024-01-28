@@ -23,31 +23,9 @@
  *
  */
 
-package net.impactdev.impactor.fabric.commands;
+package net.impactdev.impactor.api.commands;
 
-import net.impactdev.impactor.api.commands.CommandSource;
-import net.impactdev.impactor.api.logging.PluginLogger;
-import net.impactdev.impactor.api.platform.plugins.PluginMetadata;
-import net.impactdev.impactor.core.commands.manager.AbstractCommandManager;
-import net.minecraft.commands.CommandSourceStack;
-import org.incendo.cloud.CommandManager;
-import org.incendo.cloud.SenderMapper;
-import org.incendo.cloud.execution.ExecutionCoordinator;
-import org.incendo.cloud.fabric.FabricServerCommandManager;
+import net.impactdev.impactor.api.events.ImpactorEvent;
+import org.incendo.cloud.brigadier.argument.BrigadierMappings;
 
-
-public final class FabricCommandManager extends AbstractCommandManager {
-
-    private final SenderMapper<CommandSourceStack, CommandSource> mapper = new FabricSenderMapper();
-
-    public FabricCommandManager(PluginMetadata metadata, PluginLogger logger) {
-        super(metadata, logger);
-        this.initialize();
-    }
-
-    @Override
-    protected CommandManager<CommandSource> create(ExecutionCoordinator<CommandSource> coordinator) {
-        return new FabricServerCommandManager<>(coordinator, this.mapper);
-    }
-
-}
+public record RegisterBrigadierMappingsEvent(BrigadierMappings<CommandSource, ?> mappings) implements ImpactorEvent {}
