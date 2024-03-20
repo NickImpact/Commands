@@ -13,10 +13,7 @@ dependencies {
     modImplementation(fabricApi.module("fabric-lifecycle-events-v1", rootProject.property("fabric-api").toString()))
 
     api(project(":common"))
-    modApi("org.incendo:cloud-fabric:2.0.0-beta.1") {
-        exclude("net.fabricmc.fabric-api")
-        exclude("me.lucko")
-    }
+    modImplementation("org.incendo:cloud-fabric:2.0.0-beta.2")
 }
 
 tasks {

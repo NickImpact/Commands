@@ -57,7 +57,7 @@ public class ForgeServerCommandManager<C> extends NativeForgeCommandManager<C> {
      *                                   project, be sure to consider any limitations noted by the platform documentation.
      * @param senderMapper
      */
-    protected ForgeServerCommandManager(@NonNull ExecutionCoordinator<C> executionCoordinator, @NonNull SenderMapper<CommandSourceStack, C> senderMapper) {
+    public ForgeServerCommandManager(@NonNull ExecutionCoordinator<C> executionCoordinator, @NonNull SenderMapper<CommandSourceStack, C> senderMapper) {
         super(
             executionCoordinator,
             senderMapper,

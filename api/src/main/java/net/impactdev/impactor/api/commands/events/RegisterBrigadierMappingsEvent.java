@@ -23,8 +23,9 @@
  *
  */
 
-package net.impactdev.impactor.api.commands;
+package net.impactdev.impactor.api.commands.events;
 
+import net.impactdev.impactor.api.commands.CommandSource;
 import net.impactdev.impactor.api.events.ImpactorEvent;
 import org.incendo.cloud.brigadier.argument.BrigadierMappings;
 

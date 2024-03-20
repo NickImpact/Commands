@@ -27,11 +27,13 @@ package net.impactdev.impactor.core.commands.manager;
 
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.google.common.base.Strings;
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import net.impactdev.impactor.api.Impactor;
 import net.impactdev.impactor.api.commands.CommandSource;
 import net.impactdev.impactor.api.commands.ImpactorCommandManager;
-import net.impactdev.impactor.api.commands.RegisterBrigadierMappingsEvent;
+import net.impactdev.impactor.api.commands.events.RegisterBrigadierMappingsEvent;
 import net.impactdev.impactor.api.events.ImpactorEvent;
 import net.impactdev.impactor.api.logging.PluginLogger;
 import net.impactdev.impactor.api.platform.plugins.PluginMetadata;
@@ -43,6 +45,7 @@ import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.Style;
 import net.kyori.event.EventBus;
+import net.kyori.event.PostResult;
 import org.incendo.cloud.CommandManager;
 import org.incendo.cloud.brigadier.BrigadierManagerHolder;
 import org.incendo.cloud.brigadier.BrigadierSetting;
@@ -55,7 +58,9 @@ import org.incendo.cloud.execution.ExecutionCoordinator;
 import org.incendo.cloud.minecraft.extras.AudienceProvider;
 import org.incendo.cloud.minecraft.extras.MinecraftExceptionHandler;
 import org.incendo.cloud.processors.cache.CaffeineCache;
+import org.incendo.cloud.processors.cache.GuavaCache;
 import org.incendo.cloud.processors.confirmation.ConfirmationConfiguration;
+import org.incendo.cloud.processors.confirmation.ConfirmationContext;
 import org.incendo.cloud.processors.confirmation.ConfirmationManager;
 import org.incendo.cloud.setting.Configurable;
 import org.jetbrains.annotations.Nullable;
@@ -90,7 +95,7 @@ public abstract class AbstractCommandManager implements ImpactorCommandManager {
         ExecutionCoordinator<CommandSource> executor = ExecutionCoordinator.<CommandSource>builder().executor(EXECUTOR).build();
         this.manager = this.create(executor);
         this.confirmations = ConfirmationManager.of(ConfirmationConfiguration.<CommandSource>builder()
-                .cache(CaffeineCache.of(Caffeine.newBuilder().expireAfterWrite(30, TimeUnit.SECONDS).build()))
+                .cache(GuavaCache.of(CacheBuilder.newBuilder().expireAfterWrite(30, TimeUnit.SECONDS).build()))
                 .noPendingCommandNotifier(source -> source.sendMessage(text("No pending confirmations available...").color(NamedTextColor.RED)))
                 .confirmationRequiredNotifier((source, context) -> {
                     source.sendMessage(text("Click to confirm action!").color(NamedTextColor.YELLOW));
@@ -99,6 +104,7 @@ public abstract class AbstractCommandManager implements ImpactorCommandManager {
         );
         this.manager.registerCommandPostProcessor(this.confirmations.createPostprocessor());
 
+        logger.info("" + (this.manager instanceof BrigadierManagerHolder));
         if(this.manager instanceof BrigadierManagerHolder<?,?> holder && holder.hasBrigadierManager()) {
             @SuppressWarnings("unchecked")
             CloudBrigadierManager<CommandSource, ?> brigadier = (CloudBrigadierManager<CommandSource, ?>) holder.brigadierManager();
@@ -109,7 +115,17 @@ public abstract class AbstractCommandManager implements ImpactorCommandManager {
             BrigadierMappings<CommandSource, ?> mappings = brigadier.mappings();
             EventBus<ImpactorEvent> events = Impactor.instance().events();
 
-            events.post(new RegisterBrigadierMappingsEvent(mappings));
+            PostResult result = events.post(new RegisterBrigadierMappingsEvent(mappings));
+            if(!result.wasSuccessful()) {
+                PrettyPrinter printer = new PrettyPrinter(80);
+                printer.title("Failed to Register Brigadier Mappings");
+                printer.add("Stacktraces below...");
+                result.exceptions().forEach((subscriber, exception) -> {
+                    printer.add(exception);
+                });
+
+                printer.log(logger, PrettyPrinter.Level.ERROR);
+            }
         }
     }
 

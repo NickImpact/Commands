@@ -32,6 +32,7 @@ import net.impactdev.impactor.api.utility.builders.Builder;
 import org.incendo.cloud.CommandManager;
 import org.incendo.cloud.brigadier.CloudBrigadierManager;
 import org.incendo.cloud.processors.confirmation.ConfirmationManager;
+import org.incendo.cloud.processors.cooldown.CooldownManager;
 
 import java.util.Optional;
 

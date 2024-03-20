@@ -23,29 +23,36 @@
  *
  */
 
-package net.impactdev.impactor.fabric.commands;
+package net.impactdev.impactor.api.commands.events;
 
 import net.impactdev.impactor.api.commands.CommandSource;
-import net.impactdev.impactor.api.logging.PluginLogger;
-import net.impactdev.impactor.api.platform.plugins.PluginMetadata;
-import net.impactdev.impactor.core.commands.manager.AbstractCommandManager;
-import net.minecraft.commands.CommandSourceStack;
+import net.impactdev.impactor.api.events.ImpactorEvent;
 import org.incendo.cloud.CommandManager;
-import org.incendo.cloud.SenderMapper;
-import org.incendo.cloud.execution.ExecutionCoordinator;
-import org.incendo.cloud.fabric.FabricServerCommandManager;
+import org.incendo.cloud.annotations.AnnotationParser;
+import org.incendo.cloud.key.CloudKey;
+import org.incendo.cloud.processors.requirements.Requirement;
+import org.incendo.cloud.processors.requirements.RequirementPostprocessor;
+import org.incendo.cloud.processors.requirements.Requirements;
+import org.incendo.cloud.processors.requirements.annotation.RequirementBindings;
 
-public final class FabricCommandManager extends AbstractCommandManager {
+import java.lang.annotation.Annotation;
+import java.util.function.Function;
 
-    public FabricCommandManager(PluginMetadata metadata, PluginLogger logger) {
-        super(metadata, logger);
-        this.initialize();
+public record RegisterCommandRequirement(
+        CommandManager<CommandSource> manager,
+        AnnotationParser<CommandSource> parser
+) implements ImpactorEvent
+{
+
+    public <T extends Requirement<CommandSource, T>> void register(final RequirementPostprocessor<CommandSource, T> postprocessor) {
+        this.manager.registerCommandPostProcessor(postprocessor);
     }
 
-    @Override
-    protected CommandManager<CommandSource> create(ExecutionCoordinator<CommandSource> coordinator) {
-        final SenderMapper<CommandSourceStack, CommandSource> mapper = new FabricSenderMapper();
-        return new FabricServerCommandManager<>(coordinator, mapper);
+    public <T extends Requirement<CommandSource, T>, A extends Annotation> void bind(
+            CloudKey<Requirements<CommandSource, T>> key,
+            Class<A> annotation,
+            Function<A, T> provider
+    ) {
+        RequirementBindings.create(this.parser, key).register(annotation, provider);
     }
-
 }

@@ -29,7 +29,10 @@ import net.impactdev.impactor.api.commands.CommandSource;
 import net.impactdev.impactor.api.logging.PluginLogger;
 import net.impactdev.impactor.api.platform.plugins.PluginMetadata;
 import net.impactdev.impactor.core.commands.manager.AbstractCommandManager;
+import net.impactdev.impactor.forge.commands.implementation.ForgeServerCommandManager;
+import net.minecraft.commands.CommandSourceStack;
 import org.incendo.cloud.CommandManager;
+import org.incendo.cloud.SenderMapper;
 import org.incendo.cloud.brigadier.CloudBrigadierManager;
 import org.incendo.cloud.execution.ExecutionCoordinator;
 
@@ -44,7 +47,8 @@ public final class ForgeCommandManager extends AbstractCommandManager {
 
     @Override
     protected CommandManager<CommandSource> create(ExecutionCoordinator<CommandSource> coordinator) {
-        return null;
+        final SenderMapper<CommandSourceStack, CommandSource> mapper = new ForgeSenderMapper();
+        return new ForgeServerCommandManager<>(coordinator, mapper);
     }
 
 }
